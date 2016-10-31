@@ -1,6 +1,6 @@
 {
-  "name": "NG2 Talk",
-  "version": "2.0",
+  "name": "NG2Talk",
+  "version": "2.0.0",
   "description": "A quick practical intro to Angular 2",
   "homepage": "http://www.redbee.io",
   "subdomain": "revealjs",
