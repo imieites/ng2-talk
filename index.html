@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>Creación de Aplicaciones Web Modernas</title>
+
+	<meta name="description" content="Presentación sobre Angular2.">
+	<meta name="author" content="Maximiliano Britez">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+	<!-- Any section element inside of this container is displayed as a slide -->
+	<div class="slides">
+
+		<!-- Inicio y agenda -->
+		<section data-background="images/45_red.jpg">
+			<section>
+				<h1>Webapps modernas</h1>
+				<h3>¿Qué son, por qué existen, y cómo se hacen?</h3>
+				<img src="images/bee_white.png" style="border:none; width: 200px;">
+				<p>
+					<small>
+						Maxi Britez / <a href="http://twitter.com/mapsi88">@mapsi88</a> / matsi@redb.ee
+					</small>
+					<br>
+					<small>
+						Ignacio Mieites / <a href="http://twitter.com/imieites">@imieites</a> / ignacio.mieites@redb.ee
+					</small>
+					<br>
+					<small>
+						Matias Gonzalez / <a href="http://twitter.com/matitanio">@matitanio</a> / mati@redb.ee
+					</small>
+					<br>
+					<small>
+						Ezequiel Apfel / <a href="http://twitter.com/eapfel">@eapfel</a> / ezequiel@redb.ee
+					</small>
+				</p>
+			</section>
+			<section style="text-align: left;">
+				<h1 style="display:block; text-transform:uppercase;">
+					// Todo:
+				</h1>
+				<h3>// Introducción a aplicaciones WEB</h3>
+				<h3>// Evolución de aplicaciones: ServerRendered a BrowserBased</h3>
+				<h3>// Ember.js vs Angular.js vs Backbone.js vs React</h3>
+				<h3>// Angular2</h3>
+			</section>
+			<section>
+				<h1>Empecemos...</h1>
+				<div style="text-align: center;">
+					<img src="http://67.media.tumblr.com/33e608b98ea31c47053f53d841af8aac/tumblr_nqu0qmgNZt1tlb56zo1_400.gif" style="width: 50%;"/>
+				</div>
+			</section>
+		</section>
+
+		<section data-background="images/38_white.jpg" class="white">
+			<section>
+				<h1>Server rendering</h1>
+				<img src="images/server-rendering.png">
+			</section>
+			<section>
+				<h1>Origenes de Http</h1>
+				<ul>
+					<li>Petición de páginas</li>
+					<li>Carga inicial</li>
+					<li>Caché</li>
+					<li>Single endpoint</li>
+				</ul>
+				<aside class="notes">
+					Petición de páginas: es lo que creo http y html.<br>
+					Carga inicial: cargar una aplicacion js es pedir un archivo y mas y mas y mas<br>
+					Caché: si tu aplicacion solo devuelve json json es todo lo que podes cachear. no podes cachear templates<br>
+					Single endpoint: hablas con una sola api y listo. nada de muchos endpoints<br>
+				</aside>
+			</section>
+			<section>
+				<h1>Pero... ¿Que pasaría si quisiera...?</h1>
+				<ul>
+					<li>Hacer un chat</li>
+					<li>Visualizar el muro de facebook</li>
+					<li>Ver los tweets</li>
+				</ul>
+			</section>
+			<section data-background="http://i.imgur.com/FTNY501.gif"></section>
+			<section data-background="http://www.gifbin.com/bin/2074yu4sw2.gif"></section>
+			<section data-background="http://i.imgur.com/pyFY72V.gif"></section>
+			<section data-background="http://gifsec.com/wp-content/uploads/2014/02/hot-gif.gif"></section>
+		</section>
+
+		<section data-background="images/59_white.jpg" class="white">
+			<section>
+				<h1>Vamos a necesitar JS</h1>
+			</section>
+			<section>
+				<h1>En principio</h1>
+				<h2>solo para validar algunos campos...</h2>
+				<pre>
+					<code class="hljs" data-trim contenteditable>
+function validateForm() {
+  var form = document.forms["myForm"];
+  var firstName = form["firstName"].value;
+  if (firstName == null || firstName == "") {
+    alert("Name must be filled out");
+    return false;
+  }
+}
+					</code>
+				</pre>
+			</section>
+			<section data-background="http://cdn1.sbnation.com/imported_assets/1553177/7RA55.gif"></section>
+			<section>
+				<h1>Después</h1>
+				<h2>necesitamos hacer algunas consultas http</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+function loadDoc() {
+  //Create http object -- Puaj!
+  var xhttp = new XMLHttpRequest();
+  //Some kind of openning connection -- Really?
+  xhttp.open("GET", "ajax_info.txt", true);
+  //Handle the result -- Just kill me
+  xhttp.onreadystatechange = function() {
+  if (xhttp.readyState == 4 && xhttp.status == 200) {
+    document.getElementById("demo").innerHTML = xhttp.responseText;
+  }
+  //Send, ok...
+  xhttp.send();
+}
+					</code>
+				</pre>
+			</section>
+			<section data-background="https://m.popkey.co/f01690/DDzx_f-maxage-0.gif">
+			</section>
+			<section>
+				<h1>Necesitamos JQuery.js</h1>
+				<pre>
+					<code>
+function sayHi() {
+  $.get("/api/users/123", function(data, status){
+    alert("Hello: " + data.name);
+  });
+}
+					</code>
+				</pre>
+			</section>
+			<section data-background="https://media.giphy.com/media/ITnn2IenMv7SE/giphy.gif"></section>
+			<section>
+				<h2>Y que pasa si tengo muchas llamadas y callbacks...</h2>
+				<pre>
+					<code>
+fs.readdir(source, function (err, files) {
+  if (err) {
+    console.log('Error finding files: ' + err)
+  } else {
+    files.forEach(function (filename, fileIndex) {
+      console.log(filename)
+      gm(source + filename).size(function (err, values) {
+        if (err) {
+          console.log('Error identifying file size: ' + err)
+        } else {
+          console.log(filename + ' : ' + values)
+          aspect = (values.width / values.height)
+          widths.forEach(function (width, widthIndex) {
+            height = Math.round(width / aspect)
+            console.log('resizing ' + filename + 'to ' + height + 'x' + height)
+            this.resize(width, height).write(dest + 'w' + width + '_' + filename, function(err) {
+              if (err) console.log('Error writing file: ' + err)
+            })
+          }.bind(this))
+        }
+      })
+    })
+  }
+})
+					</code>
+				</pre>
+			</section>
+			<section data-background="https://media.giphy.com/media/h56b7ZOGJngsw/giphy.gif"></section>
+			<section data-background="http://vectorlogo4u.com/wp-content/uploads/2016/05/angular-icon-vector.png"></section>
+			<section>
+				<h2>Diagrama de una app web JS</h2>
+				<img src="images/Sin nombre.png">
+			</section>
+		</section>
+
+		<section data-background="images/IMG_7746_red.jpg">
+			<section>
+				<h1>¿Cuál es la herramienta mas adecuada?</h1>
+			</section>
+			<section class="full-images">
+				<img src="http://kadamwhite.github.io/talks/2012/backbone-and-underscore/images/backbone.png">
+				<img src="https://upload.wikimedia.org/wikipedia/en/6/69/Ember.js_Logo_and_Mascot.png">
+				<img src="http://www.jeckerman.com/wp-content/uploads/2013/12/angularjs-logo-300x300.png">
+				<img src="https://s3-us-west-2.amazonaws.com/chicagoview/icons/react-logo.png">
+			</section>
+			<section>
+				<h3>Angular</h3>
+				<img src="https://angular.io/resources/images/devguide/architecture/overview2.png">
+				<aside class="notes">
+					<ul>
+						<li>Aplicaciones grandes</li>
+						<li>Routing de la aplicación</li>
+						<li>Injección de dependencias</li>
+						<li>Two-way Data Binding</li>
+						<li>Promises, ejecución asíncrona</li>
+						<li>Componentes reutilizables, directivas</li>
+						<li>Comunicación entre componentes via eventos</li>
+					<ul>
+				</aside>
+			</section>
+			<section>
+				<h1>¿Por qué debería usar Angular?</h1>
+			</section>
+			<section data-background="http://i.makeagif.com/media/8-10-2015/vFlFL-.gif">
+			</section>
+		</section>
+
+		<section data-background="images/45_red.jpg">
+			<section><h2>Angular 2</h2></section>
+			<section data-background="http://i.imgur.com/uPp4R86.gif?noredirect	"></section>
+			<section>
+				<h1>Muy tarde...</h1>
+				<ul>
+					<li>Muchos release candidates</li>
+					<li>Es un freamework completamente distinto</li>
+					<li>Muy grande, si solo quiero hacer algo sencillo</li>
+					<li>La comunidad se fue a lo minimalista de react o vue</li>
+					<li>Muchos problemas de diseño y retrabajo</li>
+				</ul>
+			</section>
+			<section data-background="http://i1.kym-cdn.com/photos/images/original/000/825/595/454.gif"></section>
+		</section>
+	</section>
+
+	<section data-background="images/45_red.jpg">
+		<section><h2>Lo nuevo en Angular 2</h2></section>
+		<section>
+			<img style="max-width: 400px" src="https://raw.githubusercontent.com/remojansen/logo.ts/master/ts.png">
+			<h2>Typescript</h2>
+		</section>
+
+		<section>
+			<h2>Componentes</h2>
+			<img src="images/componentes.png">
+		</section>
+
+		<section>
+			<h2>Scoped styles</h2>
+			<img src="https://i.ytimg.com/vi/j6wFcpGF1OA/maxresdefault.jpg">
+		</section>
+
+		<section>
+			<h2>Servicios</h2>
+			<pre>
+				<code>
+@Injectable()
+export class GithubFetchService {
+  baseUrl:string = 'https://api.github.com/search/users?q=';
+
+  constructor(private http: Http) { }
+
+  getUserList(nameQuery:string){
+    return this.http.get(this.baseUrl+nameQuery);
+  }
+
+}
+				</code>
+			</pre>
+		</section>
+
+
+		<section>
+			<h2>Observables</h2>
+			<pre>
+				<code>
+@Component{
+  selector: 'app-gf-detail',
+  templateUrl: './gf-detail.component.html',
+  styleUrls: ['./gf-detail.component.css']
+})
+export class GfDetailComponent implements OnInit {
+  user: any;
+
+  getUser(name:string){
+    this.gfService.getUser(name).subscribe(res => {
+      this.user = res.json();
+      console.log(this.user);
+    });
+  }
+}
+				</code>
+			</pre>
+		</section>
+
+		<section>
+			<h2>Directivas</h2>
+			<pre>
+				<code>
+<div *ngIf="!loading">
+  <div *ngIf="usersList.length > 0">
+    <ul class="list-group">
+      <li *ngFor="let user of usersList" class="list-group-item">
+        <span class="badge"><span class="glyphicon glyphicon-star"></span></span>
+        <b><a routerLink="/user/{{user.login}}">{{user.login}}</a></b> (<a href="{{user.html_url}}">{{user.html_url}}</a>)
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="usersList.length < 1">
+    <div class="well">No hay usuarios para mostrar.</div>
+  </div>
+</div>
+				</code>
+			</pre>
+		</section>
+
+		<section>
+			<h2>Routing</h2>
+			<pre>
+				<code>@NgModule({
+  declarations: [ ... , ],
+  imports: [
+    ... ,
+    RouterModule.forRoot([
+      { path: 'user/:userName', component: GfDetailComponent },
+      { path: '', component: GfMainComponent },
+      { path: '**', component: GfMainComponent }
+    ])
+  ]
+  bootstrap: [AppComponent]
+})
+				</code>
+			</pre>
+		</section>
+
+		<section>
+			<h2>Angular cli</h2>
+			<img style="width:900px" src="images/cli-logo.svg">
+		</section>
+
+		<section>
+			<h2>Y mucho mas...</h2>
+		</section>
+	</section>
+
+		<section data-background="images/59_white.jpg" class="white">
+		<h1>Demo</h1>
+	</section>
+<!--
+			<section>
+				<h2>Empecemos ...</h2>
+				<pre>
+					<code>
+		<app-root>Loading...</app-root>
+					</code>
+				</pre>
+			</section>
+			<section>
+				<img style="max-width: 600px" src="https://qph.ec.quoracdn.net/main-qimg-d84ff3356ace830dab3009cf3430afa8?convert_to_webp=true">
+				<h2>Componentes</h2>
+				<aside class="notes">
+
+				  </aside>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+	  selector: 'app-root',
+	  template: `
+	    <ul>
+	      <li>Tab 1</li>
+	      <li>Tab 2</li>
+	    </ul>
+	  `
+	})
+	export class AppRoot {	}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Más Componentes</h2>
+				<aside class="notes">
+
+				  </aside>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+	  selector: 'other-cmp',
+	  template: `
+	    <p>Soy otro componente!</p>
+	  `
+	})
+	export class OtherCmp {	}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Import</h2>
+				<aside class="notes">
+
+				  </aside>
+					<pre>
+						<code>
+import { OtherCmp } from './components/other.cmpt';
+						</code>
+					</pre>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+	  selector: 'app-root',
+	  template: `
+	    <div>
+	      <other-cmp></other-cmp>
+	    </div>
+	  `,
+    directives: [ OtherCmp ]
+	})
+
+	export class AppRoot {	}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>¿Scopes?</h2>
+				<h3>A donde vamos, no necesitamos scopes ...</h3>
+			</section>
+			<section data-background="http://67.media.tumblr.com/tumblr_lcvf36M7zC1qa54hvo1_500.gif"></section>
+			<section>
+				<h2>Scope en Angular 1</h2>
+				<pre>
+					<code>
+function($scope){
+	$scope.infoTabA = "Tab 1";
+	$scope.infoTabB = "Tab 2";
+}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Scope en Angular 2? No hay.</h2>
+				<pre>
+					<code>
+constructor(){
+	this.infoTabA = "Tab 1";
+	this.infoTabB = "Tab 2";
+}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+	  selector: 'tabs',
+	  template: `
+	    <ul>
+	      <li>{{infoTabA}}</li>
+	      <li>{{infoTabA}}</li>
+	    </ul>
+	  `
+	})
+	export class Tabs {
+		constructor(){
+			this.infoTabA = "Tab 1";
+			this.infoTabB = "Tab 2";
+		}
+	}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Estilos</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+	  selector: 'tabs',
+	  template: `
+	    <ul>
+	      <li>{{infoTabA}}</li>
+	      <li>{{infoTabA}}</li>
+	    </ul>
+	  `,
+  	styles:[` li { color: red; } `]
+	})
+
+	export class Tabs {
+		constructor(){
+			this.infoTabA = "Tab 1";
+			this.infoTabB = "Tab 2";
+		}
+	}
+					</code>
+				</pre>
+			</section>
+
+			<section>
+				<h2>Directivas</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+	@Component({
+		selector: 'tabs',
+		template: `
+			<ul>
+				<li>{{infoTabA}}</li>
+				<li>{{infoTabA}}</li>
+			</ul>
+		`,
+		styles:[` li { color: red; } `]
+	})
+
+	export class Tabs {
+		constructor(){
+			this.infoTabA = "Tab 1";
+			this.infoTabB = "Tab 2";
+		}
+	}
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Directivas de Estructura</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+	<div *ngIf="errorCount > 0" class="error">
+	  {{errorCount}} errores detectados
+	</div>
+					</code>
+				</pre>
+			</section>
+
+			<section>
+				<h2>Directivas de Atributo</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+import { Directive, ElementRef, Input }
+from '@angular/core';
+@Directive({ selector: '[myHighlight]' })
+export class HighlightDirective {
+    constructor(el: ElementRef) {
+       el.nativeElement.style.backgroundColor = 'yellow';
+    }
+}
+					</code>
+				</pre>
+			</section>
+
+			<section>
+				<pre>
+					<code>
+  <p myHighlight>Highlight me!</p>
+					</code>
+				</pre>
+			</section>
+
+			<section>
+				<h2>Observables</h2>
+				<aside class="notes">
+callbacks: es una funcion q le paso a otra funcion<br>
+promise: es un objeto que me devuelven, y cuando se resuelve ejecuto algo<br>
+observable: puedo observar un cambio y otro, haciendo un subscribe<br>
+cuando se usa esto? http methods, comunicacion entre componentes.
+				  </aside>
+			</section>
+			<section>
+				<h2>CLI</h2>
+			</section>
+			<section>
+				<pre>
+					<code>
+	ng new PROJECT_NAME
+	cd PROJECT_NAME
+					</code>
+				</pre>
+			</section>
+			<section>
+				<pre>
+					<code>
+$ ll
+total 48K
+-rw-rw-r--  1 ignacio ignacio  657 ago 25 19:00 angular-cli-build.js
+-rw-rw-r--  1 ignacio ignacio  545 ago 25 19:00 angular-cli.json
+drwxrwxr-x  2 ignacio ignacio 4,0K ago 25 19:00 config
+drwxrwxr-x  2 ignacio ignacio 4,0K ago 25 19:00 e2e
+drwxrwxr-x 22 ignacio ignacio 4,0K ago 25 19:01 node_modules
+-rw-rw-r--  1 ignacio ignacio 1,2K ago 25 19:00 package.json
+drwxrwxr-x  2 ignacio ignacio 4,0K ago 25 19:00 public
+-rw-rw-r--  1 ignacio ignacio 1,2K ago 25 19:00 README.md
+drwxrwxr-x  3 ignacio ignacio 4,0K ago 25 19:00 src
+-rw-rw-r--  1 ignacio ignacio 2,5K ago 25 19:00 tslint.json
+drwxrwxr-x  4 ignacio ignacio 4,0K ago 25 19:02 typings
+-rw-rw-r--  1 ignacio ignacio  352 ago 25 19:00 typings.json
+					</code>
+				</pre>
+			</section>
+			<section>
+				<pre>
+					<code>
+	ng serve
+					</code>
+				</pre>
+			</section>
+			<section>
+				<h2>Ventajas</h2>
+				<aside class="notes">
+esta a la vanguardia: nuevos paradigmas, nuevas tecnologias<br>
+esto tambien es malo.<br>
+ejemplo de cuando lo usamos y cuando no
+				  </aside>
+			</section>
+			<section>
+				<h2>+ Info</h2>
+				<aside class="notes">
+twitter<br>
+github, van a ver que mi codigo no es lo mas prolijo del mundo, si yo puedo hacer una app en ng2, cualquiera puede<br>
+					</aside>
+			</section>
+		</section>
+
+
+		<section data-background="images/120_red.jpg">
+			<h1>Gracias!</h1>
+			<img src="images/bee_white.png" style="border:none; width: 200px;">
+		</section>
+	-->
+	</div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: true,
+		progress: true,
+		history: true,
+		center: true,
+
+		transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+			{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+			{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+			{ src: 'plugin/zoom-js/zoom.js', async: true },
+			{ src: 'plugin/notes/notes.js', async: true }
+		]
+	});
+
+</script>
+
+</body>
+</html>
